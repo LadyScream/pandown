@@ -1,0 +1,62 @@
+#!/bin/bash
+
+header="header.yaml"
+css="style.css"
+format="html"
+
+while getopts ":h:i:t:f:c:-:" o; do
+  case ${o} in
+    i)
+      input=$OPTARG
+      ;;
+    t)
+      target=$OPTARG
+      ;;
+    h)
+      header=$OPTARG
+      ;;
+    f)
+      format=$OPTARG
+      ;;
+    c)
+      css=$OPTARG
+      ;;
+    \?)
+      echo "Invalid Option: $OPTARG" 1>&2
+      ;;
+    :)
+      echo "Invalid Option: $OPTARG requires an argument" 1>&2
+      ;;
+    -)
+      case ${OPTARG} in
+        "help"*)
+          echo "pandown [OPTIONS] -i [INPUT] -t [TARGET]"
+          echo "--help    -- Show this message"
+          echo "-c CSS    -- CSS file for styling, if omited uses default"
+          echo "-f FORMAT -- Format of the input file, it's 'markdown' by
+          default"
+          echo "-h HEADER -- YAML file with header information, if omited uses
+          default"
+          echo "-i INPUT  -- Input file path"
+          echo "-t TARGET -- Target file path"
+          exit 0
+          ;;
+      esac
+  esac
+done
+shift $((OPTIND -1))
+
+if [ -z $target ]
+then
+  echo -e "No target defined!\nSee --help for more information"
+  exit 1
+fi
+
+if [ -z $input ]
+then
+  echo -e "No input defined!\nSee --help for more information"
+  exit 1
+fi
+
+pandoc $header $input -t $format --filter pandoc-citeproc --css $css -o $target
+exit $?
