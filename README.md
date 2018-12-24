@@ -33,6 +33,7 @@ $ pandown --help
 
 ## Usage
 
+```
 pandown [OPTIONS] -i [INPUT] -t [TARGET]
 --help    -- Show this message
 -c CSS    -- Append CSS file for styling, if omited uses default
@@ -42,6 +43,7 @@ pandown [OPTIONS] -i [INPUT] -t [TARGET]
 -s CSL    -- CSL file for citation style, if omited uses default
 -i INPUT  -- Input file path
 -t TARGET -- Target file path
+```
 
 ## License
 
