@@ -73,12 +73,13 @@ then
   exit 1
 fi
 
-echo Header: $header
-echo Input:  $input
-echo Format: $format
-echo Css:    $css
-echo Csl:    $csl
-echo Target: $target
-
-pandoc $header $input -t $format --filter pandoc-citeproc --csl=$csl --css=$css $args -s -o $target > /dev/null
-exit $?
+echo "Compiling ${input} into ${target}..."
+pandoc $header $input -t $format --filter pandoc-citeproc --csl=$csl \
+  --css=$css $args -s -o $target &> /dev/null
+if [[ $? == 0 ]]
+then
+  echo "Done!"
+  exit 0
+fi
+echo "Something went wrong!"
+exit 127
