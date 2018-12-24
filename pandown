@@ -1,10 +1,15 @@
 #!/bin/bash
 
-header="header.yaml"
-css="style.css"
+tmp=$(dirname "$0")
+path=$(realpath "${tmp}/pandown")
+dir=$(dirname "$path")
+header="${dir}/header.yaml"
+css="${dir}/style.css"
 format="html"
+csl="${dir}/styles/apa.csl"
+args=""
 
-while getopts ":h:i:t:f:c:-:" o; do
+while getopts ":h:i:t:f:c:C:s:-:" o; do
   case ${o} in
     i)
       input=$OPTARG
@@ -18,7 +23,13 @@ while getopts ":h:i:t:f:c:-:" o; do
     f)
       format=$OPTARG
       ;;
+    s)
+      csl=$OPTARG
+      ;;
     c)
+      css="${css} --css=${OPTARG}"
+      ;;
+    C)
       css=$OPTARG
       ;;
     \?)
@@ -32,16 +43,20 @@ while getopts ":h:i:t:f:c:-:" o; do
         "help"*)
           echo "pandown [OPTIONS] -i [INPUT] -t [TARGET]"
           echo "--help    -- Show this message"
-          echo "-c CSS    -- CSS file for styling, if omited uses default"
+          echo "-c CSS    -- Append CSS file for styling, if omited uses default"
+          echo "-C CSS    -- Overwrites CSS file for styling, if omited uses default"
           echo "-f FORMAT -- Format of the input file, it's 'markdown' by
           default"
           echo "-h HEADER -- YAML file with header information, if omited uses
+          default"
+          echo "-s CSL    -- CSL file for citation style, if omited uses
           default"
           echo "-i INPUT  -- Input file path"
           echo "-t TARGET -- Target file path"
           exit 0
           ;;
       esac
+      ;;
   esac
 done
 shift $((OPTIND -1))
@@ -58,5 +73,12 @@ then
   exit 1
 fi
 
-pandoc $header $input -t $format --filter pandoc-citeproc --css $css -o $target
+echo Header: $header
+echo Input:  $input
+echo Format: $format
+echo Css:    $css
+echo Csl:    $csl
+echo Target: $target
+
+pandoc $header $input -t $format --filter pandoc-citeproc --csl=$csl --css=$css $args -s -o $target > /dev/null
 exit $?
