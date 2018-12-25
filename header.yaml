@@ -1,4 +1,6 @@
 ---
 papersize: letter
 lang: es-MX
+nocite: |
+  @*
 ---
