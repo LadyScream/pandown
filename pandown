@@ -63,8 +63,7 @@ shift $((OPTIND -1))
 
 if [ -z $target ]
 then
-  echo -e "No target defined!\nSee --help for more information"
-  exit 1
+  target=${input%\.*}.pdf
 fi
 
 if [ -z $input ]
